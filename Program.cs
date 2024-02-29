@@ -3,6 +3,16 @@ using Microsoft.OpenApi.Models;
 
 
 var builder = WebApplication.CreateBuilder(args);
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll", builder =>
+    {
+        builder
+            .AllowAnyHeader()
+            .AllowAnyMethod()
+            .AllowAnyOrigin();
+    });
+});
 builder.Services.AddDbContext<FruitDb>(opt => opt.UseInMemoryDatabase("FruitList"));
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 builder.Services.AddEndpointsApiExplorer();
@@ -128,6 +138,6 @@ app.MapDelete("/fruitlist/color/{id}", async (int id, FruitDb db) =>
 
 app.UseSwagger();
 app.UseSwaggerUI();
-
+app.UseCors("AllowAll");
 
 app.Run();
